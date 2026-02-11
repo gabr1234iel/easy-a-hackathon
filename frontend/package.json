@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
+    "@google/generative-ai": "^0.24.1",
+    "@metamask/sdk": "^0.33.1",
     "@phosphor-icons/react": "^2.1.10",
+    "@tanstack/react-query": "^5.90.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
@@ -19,7 +22,9 @@
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "viem": "^2.45.3",
+    "wagmi": "^3.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

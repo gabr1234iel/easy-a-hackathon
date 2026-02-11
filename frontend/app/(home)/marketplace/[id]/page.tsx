@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Copy } from '@phosphor-icons/react';
+import { Copy, Star } from '@phosphor-icons/react';
 import { use } from 'react';
+import { RatingModal } from '@/components/marketplace/rating-modal';
 
 // Mock data - replace with actual data fetching
 const getServiceById = (id: string) => {
@@ -14,7 +15,9 @@ const getServiceById = (id: string) => {
     endpoint: 'https://e2e-test.example.com/api',
     proxyUrl:
       'https://seo-patents-diamond-meters.trycloudflare.com/proxy/0x96548e4b7363fdabc5bc76ef3244a38077d282b71e50a8235625bd44bd7daa8a',
-    pricePerCall: 0.001
+    pricePerCall: 0.001,
+    rating: 4.8,
+    ratingCount: 12
   };
 };
 
@@ -31,6 +34,11 @@ export default function ServiceDetailPage({
   const [headers, setHeaders] = useState<Array<{ key: string; value: string }>>(
     [{ key: 'Content-Type', value: 'application/json' }]
   );
+  
+  // Rating State
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
+  const [hasPurchased, setHasPurchased] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const addHeader = () => {
     setHeaders([...headers, { key: '', value: '' }]);
@@ -54,11 +62,36 @@ export default function ServiceDetailPage({
     navigator.clipboard.writeText(text);
   };
 
+  const handleExecute = async () => {
+    setIsProcessing(true);
+    // Simulate API call / blockchain transaction
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setHasPurchased(true);
+    setIsProcessing(false);
+    
+    // Optionally auto-open rating modal after success
+    // setIsRatingModalOpen(true);
+  };
+
+  const handleRatingSubmit = (rating: number, comment: string) => {
+    console.log('Submitting rating:', { serviceId: id, rating, comment });
+    // TODO: Call smart contract submitRating()
+    // toast.success("Rating submitted successfully!");
+  };
+
   return (
     <div className="space-y-8">
       {/* Service Details Section */}
       <div>
-        <h2 className="text-lg font-semibold mb-4">Service Details</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Service Details</h2>
+          <div className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md">
+            <Star weight="fill" className="text-yellow-400" />
+            <span className="font-medium text-sm">{service.rating}</span>
+            <span className="text-xs text-muted-foreground">({service.ratingCount} reviews)</span>
+          </div>
+        </div>
+        
         <div className="border border-border rounded-lg p-6 space-y-4">
           {/* Service Name */}
           <div>
@@ -190,9 +223,35 @@ export default function ServiceDetailPage({
       </div>
 
       {/* Execute Request Button */}
-      <Button size="lg" className="w-full">
-        Execute Request
-      </Button>
+      <div className="space-y-4">
+        <Button 
+          size="lg" 
+          className="w-full" 
+          onClick={handleExecute}
+          disabled={isProcessing}
+        >
+          {isProcessing ? 'Processing...' : 'Execute Request'}
+        </Button>
+        
+        {hasPurchased && (
+          <Button 
+            variant="secondary" 
+            className="w-full"
+            onClick={() => setIsRatingModalOpen(true)}
+          >
+            <Star className="mr-2" />
+            Rate this Service
+          </Button>
+        )}
+      </div>
+
+      {/* Rating Modal */}
+      <RatingModal 
+        isOpen={isRatingModalOpen}
+        onClose={() => setIsRatingModalOpen(false)}
+        onSubmit={handleRatingSubmit}
+        serviceName={service.name}
+      />
     </div>
   );
 }
