@@ -35,10 +35,10 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 border-r border-border bg-card h-screen sticky top-0 flex flex-col">
+    <aside className="w-64 border-r border-border bg-card flex flex-col shrink-0 h-screen sticky top-0">
       {/* Logo Area */}
       <div className="p-6">
-        <Link href="/marketplace">
+        <Link href="/">
           <div className="text-2xl font-black tracking-tighter text-primary cursor-pointer">Clawpump</div>
         </Link>
       </div>

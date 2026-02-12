@@ -6,7 +6,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-white relative overflow-hidden">
+    <div className="flex h-screen bg-white relative overflow-hidden">
       {/* Vibrant Blue & Green Gradient Background */}
       <div className="fixed inset-0 pointer-events-none">
         {/* Top Left - Emerald Green */}
@@ -26,7 +26,7 @@ export default function HomeLayout({
       </div>
       
       <Sidebar />
-      <main className="flex-1 p-8 overflow-y-auto w-full relative z-10">{children}</main>
+      <main className="flex-1 p-8 w-full relative z-10 overflow-y-auto h-full">{children}</main>
     </div>
   );
 }
