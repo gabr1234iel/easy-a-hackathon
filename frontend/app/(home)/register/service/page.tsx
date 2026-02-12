@@ -148,7 +148,9 @@ export default function RegisterServicePage() {
           </section>
 
           <Button className="w-full py-8 text-lg font-bold rounded-2xl bg-foreground text-background hover:bg-foreground/90">
-            Launch your Service and Coin
+            <Link href="/my-services" className="w-full h-full flex items-center justify-center">
+              Launch your Service and Coin
+            </Link>
           </Button>
         </div>
       </div>
