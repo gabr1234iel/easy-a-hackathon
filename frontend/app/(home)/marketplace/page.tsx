@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ServiceCard } from '@/components/marketplace/service-card';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface Service {
   id: string;
@@ -131,14 +132,17 @@ export default function MarketplacePage() {
   return (
     <>
       {/* Tag Filter */}
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-3">Filter by Tags</h2>
-        <div className="flex flex-wrap gap-2">
+      <div className="mb-10">
+        <h2 className="text-xl font-bold mb-5">Filter by Tags</h2>
+        <div className="flex flex-wrap gap-4">
           {allTags.map(tag => (
             <Badge
               key={tag}
               variant={selectedTags.includes(tag) ? 'default' : 'outline'}
-              className="cursor-pointer transition-transform"
+              className={cn(
+                "cursor-pointer transition-all text-base py-3 px-8 rounded-2xl hover:scale-110 shadow-sm",
+                !selectedTags.includes(tag) && "bg-white border-border hover:bg-white/90"
+              )}
               onClick={() => toggleTag(tag)}
             >
               {tag}
@@ -156,7 +160,7 @@ export default function MarketplacePage() {
       </div>
 
       {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
         {filteredServices.map(service => (
           <ServiceCard key={service.id} service={service} />
         ))}

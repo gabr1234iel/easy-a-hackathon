@@ -2,13 +2,29 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight } from '@phosphor-icons/react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Copy,
+  Check,
+  Coins,
+  Link as LinkIcon
+} from '@phosphor-icons/react';
 
 type Step = 1 | 2 | 3 | 4;
 
 export default function RegisterAgentPage() {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [supportsX402, setSupportsX402] = useState(false);
+  const [agentName, setAgentName] = useState('');
+  const [apiKey, setApiKey] = useState('sk_pragma_' + Math.random().toString(36).substring(2, 15));
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleNext = () => {
     if (currentStep < 4) {
@@ -24,6 +40,13 @@ export default function RegisterAgentPage() {
 
   return (
     <>
+      {/* Header for Steps 1-3 */}
+      {currentStep < 4 && (
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold mb-2">Agent Details</h1>
+        </div>
+      )}
+
       {/* Step 1: Agent Details */}
       {currentStep === 1 && (
         <div className="space-y-6">
@@ -34,6 +57,8 @@ export default function RegisterAgentPage() {
             </label>
             <input
               type="text"
+              value={agentName}
+              onChange={e => setAgentName(e.target.value)}
               placeholder="e.g., GPT-4 Research Assistant"
               className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring"
             />
@@ -206,19 +231,75 @@ export default function RegisterAgentPage() {
         </div>
       )}
 
-      {/* Step 4: Pool */}
+      {/* Step 4: API Credentials */}
       {currentStep === 4 && (
-        <div className="space-y-6">
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold mb-2">Pool</h2>
-            <p className="text-muted-foreground">
-              Pool configuration coming soon...
-            </p>
+        <div className="space-y-8">
+          <div className="bg-card border border-border rounded-2xl p-8 space-y-8">
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">API Credentials</h2>
+                <p className="text-muted-foreground mt-1">Use these to authenticate your service requests</p>
+              </div>
+              <button 
+                onClick={() => window.location.href = `/marketplace/${agentName.toLowerCase() || 'new-service'}`} 
+                className="p-3 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-colors group relative"
+                title="View Service Coin"
+              >
+                <Coins size={28} weight="fill" />
+                <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  View Service Coin
+                </span>
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Service Name Label */}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
+                  Service Name
+                </label>
+                <div className="text-lg font-semibold text-foreground px-4 py-3 bg-muted/30 rounded-xl border border-border/50">
+                  {agentName || 'Unnamed Service'}
+                </div>
+              </div>
+
+              {/* API Key */}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
+                  API Key
+                </label>
+                <div className="relative group">
+                  <div className="w-full px-4 py-4 bg-muted/50 border border-border rounded-xl font-mono text-sm break-all pr-12">
+                    {apiKey}
+                  </div>
+                  <button
+                    onClick={() => handleCopy(apiKey)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 hover:bg-background/80 rounded-lg transition-colors text-muted-foreground hover:text-foreground"
+                  >
+                    {copied ? <Check size={20} className="text-green-500" /> : <Copy size={20} />}
+                  </button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Keep this key secret. Do not share it in client-side code.
+                </p>
+              </div>
+
+              {/* API Endpoint */}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2 block">
+                  API Endpoint
+                </label>
+                <div className="flex items-center gap-3 px-4 py-4 bg-muted/50 border border-border rounded-xl font-mono text-sm text-muted-foreground">
+                  <LinkIcon size={18} />
+                  <span>https://api.pragma.money/v1/execute</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Navigation */}
           <div className="flex justify-start">
-            <Button onClick={handleBack} variant="outline" size="lg">
+            <Button onClick={handleBack} variant="outline" size="lg" className="rounded-xl">
               <ArrowLeft weight="bold" />
               Back
             </Button>

@@ -4,7 +4,7 @@
   "description": "Express proxy middleware server",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon --exec 'npx tsx' src/server.ts",
+    "dev": "nodemon --exec \"tsx\" src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },

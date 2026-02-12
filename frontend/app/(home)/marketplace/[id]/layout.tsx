@@ -11,7 +11,7 @@ export default function ServiceDetailLayout({
       </div>
 
       {/* Content */}
-      <div className="max-w-3xl">{children}</div>
+      <div className="w-full">{children}</div>
     </>
   );
 }
