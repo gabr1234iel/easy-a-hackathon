@@ -11,20 +11,11 @@ import {
   TerminalWindow, 
   Star 
 } from '@phosphor-icons/react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { cn } from '@/lib/utils';
 
 export default function Sidebar() {
   const pathname = usePathname();
-
-  const handleWalletConnect = (walletType: string) => {
-    console.log(`Connecting to ${walletType}`);
-  };
 
   const navItems = [
     { name: 'Marketplace', href: '/marketplace', icon: Storefront },
@@ -66,25 +57,90 @@ export default function Sidebar() {
 
       {/* Bottom Area - Wallet */}
       <div className="p-4 border-t border-border">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="default" className="w-full gap-2 h-12 rounded-xl shadow-lg shadow-primary/20">
-              <Wallet size={20} weight="bold" />
-              Connect Wallet
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" side="top" className="w-56">
-            <DropdownMenuItem onClick={() => handleWalletConnect('MetaMask')}>
-              MetaMask
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleWalletConnect('Coinbase Wallet')}>
-              Coinbase Wallet
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleWalletConnect('OKX Wallet')}>
-              OKX Wallet
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ConnectButton.Custom>
+          {({
+            account,
+            chain,
+            openAccountModal,
+            openChainModal,
+            openConnectModal,
+            authenticationStatus,
+            mounted,
+          }) => {
+            const ready = mounted && authenticationStatus !== 'loading';
+            const connected =
+              ready &&
+              account &&
+              chain &&
+              (!authenticationStatus ||
+                authenticationStatus === 'authenticated');
+
+            return (
+              <div
+                {...(!ready && {
+                  'aria-hidden': true,
+                  'style': {
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    userSelect: 'none',
+                  },
+                })}
+              >
+                {(() => {
+                  if (!connected) {
+                    return (
+                      <Button onClick={openConnectModal} variant="default" className="w-full gap-2 h-12 rounded-xl shadow-lg shadow-primary/20">
+                        <Wallet size={20} weight="bold" />
+                        Connect Wallet
+                      </Button>
+                    );
+                  }
+
+                  if (chain.unsupported) {
+                    return (
+                      <Button onClick={openChainModal} variant="destructive" className="w-full gap-2 h-12 rounded-xl shadow-lg">
+                        Wrong network
+                      </Button>
+                    );
+                  }
+
+                  return (
+                    <div className="flex flex-col gap-2">
+                      <Button onClick={openChainModal} variant="outline" className="w-full justify-start gap-2 h-10 px-3">
+                        {chain.hasIcon && (
+                          <div
+                            style={{
+                              background: chain.iconBackground,
+                              width: 20,
+                              height: 20,
+                              borderRadius: 999,
+                              overflow: 'hidden',
+                              marginRight: 4,
+                            }}
+                          >
+                            {chain.iconUrl && (
+                              <img
+                                alt={chain.name ?? 'Chain icon'}
+                                src={chain.iconUrl}
+                                style={{ width: 20, height: 20 }}
+                              />
+                            )}
+                          </div>
+                        )}
+                        {chain.name}
+                      </Button>
+
+                      <Button onClick={openAccountModal} variant="secondary" className="w-full justify-start gap-2 h-10 px-3 font-mono text-sm overflow-hidden">
+                        <div className="w-2 h-2 rounded-full bg-green-500 mr-1 shrink-0" />
+                        <span className="truncate">{account.displayName}</span>
+                      </Button>
+                    </div>
+                  );
+                })()}
+              </div>
+            );
+          }}
+        </ConnectButton.Custom>
       </div>
     </aside>
   );
