@@ -50,8 +50,7 @@ This project is built on **Base** to leverage its low fees and high throughput.
 ## 🎥 Demo & Presentation
 
 ### 📺 Demo Video
-*(Add your Loom/YouTube video link here)*
-> **Video Walkthrough**: Explains project workflow, GitHub structure, and full feature demo.
+https://drive.google.com/file/d/130_TYcpDIsuC-ya-3-yLWF6RodGclWCZ/view?usp=sharing
 
 ### 🖼 UI Screenshots
 1.  **Dashboard**: Overview of Agent performance.
