@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Copy, Eye, EyeOff, RefreshCw, ExternalLink } from 'lucide-react';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const MY_APIS = [
@@ -28,7 +28,7 @@ const MY_APIS = [
   }
 ];
 
-export default function MyApisPage() {
+function MyApisContent() {
   const searchParams = useSearchParams();
   const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
   const newServiceId = searchParams.get('new');
@@ -197,5 +197,26 @@ export default function MyApisPage() {
         ))}
       </div>
     </div>
+  );
+}
+
+export default function MyApisPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto py-10 px-4 md:px-6">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold tracking-tight">
+              Your API Subscriptions
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Loading your API subscriptions...
+            </p>
+          </div>
+        </div>
+      }
+    >
+      <MyApisContent />
+    </Suspense>
   );
 }
